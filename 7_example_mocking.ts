@@ -4,8 +4,7 @@
 ///
 /// Manual Instanciation when needed
 
-import { Observable, Subscription } from 'rxjs';
-import { TestScheduler } from 'rxjs/testing';
+import { Observable, of, Subscription } from 'rxjs';
 
 export class ServiceImpl implements Service {
   serveHelloWorld(): Observable<string> {
@@ -25,22 +24,6 @@ export class ServiceImpl implements Service {
   }
 }
 
-export class MockService implements Service {
-  serveHelloWorld(): Observable<string> {
-    return new Observable((observer) => {
-      observer.next('Fake Data');
-      observer.complete();
-    });
-  }
-
-  serveJohnDoe(): Observable<string> {
-    return new Observable((observer) => {
-      observer.next('Fake Data');
-      observer.complete();
-    });
-  }
-}
-
 export interface Service {
   serveHelloWorld(): Observable<string>;
   serveJohnDoe(): Observable<string>;
@@ -55,22 +38,6 @@ export class RepositoryImpl implements Repository {
 
   fetchJohnDoe(): Observable<string> {
     return this.service.serveJohnDoe();
-  }
-}
-
-export class MockRepository implements Repository {
-  fetchHelloWorld(): Observable<string> {
-    return new Observable((observer) => {
-      observer.next('Fake Data');
-      observer.complete();
-    });
-  }
-
-  fetchJohnDoe(): Observable<string> {
-    return new Observable((observer) => {
-      observer.next('Fake Data');
-      observer.complete();
-    });
   }
 }
 
@@ -115,7 +82,40 @@ export class Client {
   }
 }
 
-function testRepositoryImpl(): void {
+/// Testing files ///
+export class MockService implements Service {
+  serveHelloWorld(): Observable<string> {
+    return new Observable((observer) => {
+      observer.next('Fake Data');
+      observer.complete();
+    });
+  }
+
+  serveJohnDoe(): Observable<string> {
+    return new Observable((observer) => {
+      observer.next('Fake Data');
+      observer.complete();
+    });
+  }
+}
+
+export class MockRepository implements Repository {
+  fetchHelloWorld(): Observable<string> {
+    return new Observable((observer) => {
+      observer.next('Fake Data');
+      observer.complete();
+    });
+  }
+
+  fetchJohnDoe(): Observable<string> {
+    return new Observable((observer) => {
+      observer.next('Fake Data');
+      observer.complete();
+    });
+  }
+}
+
+function test_RepositoryImpl_fetchHelloWorld(): void {
   // Arrange
   const mockService = new MockService();
   const repository = new RepositoryImpl(mockService);
@@ -124,6 +124,46 @@ function testRepositoryImpl(): void {
   repository.fetchHelloWorld().subscribe((data) => console.log(data == 'Fake Data'));
 }
 
-testRepositoryImpl();
+function test_RepositoryImpl_fetchJohnDoe(): void {
+  // Arrange
+  const mockService: Service = {
+    serveHelloWorld: () => of('Not used'),
+    serveJohnDoe: () => of('Fake super data'),
+  };
+  const repository = new RepositoryImpl(mockService);
+
+  // Act and assert
+  repository.fetchHelloWorld().subscribe((data) => console.log(data == 'Fake super data'));
+}
+
+function test_Client_showHelloWorld(): void {
+  // Arrange
+  const mockRepository = new MockRepository();
+  const client = new Client(mockRepository);
+
+  // Act and assert
+  client.showHelloWorld();
+
+  console.log(true);
+}
+
+function test_Client_showJohnDoe(): void {
+  // Arrange
+  const mockRepository: Repository = {
+    fetchHelloWorld: () => of('Not used'),
+    fetchJohnDoe: () => of('Fake john doe'),
+  };
+  const client = new Client(mockRepository);
+
+  // Act and assert
+  client.showJohnDoe();
+
+  console.log(true);
+}
+
+test_RepositoryImpl_fetchHelloWorld();
+test_RepositoryImpl_fetchJohnDoe();
+test_Client_showHelloWorld();
+test_Client_showJohnDoe();
 
 // Test unitaire
