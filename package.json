@@ -1,0 +1,22 @@
+{
+  "name": "dependency-injeciton",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "1": "tsc && node ./dist/1_example_naive_instance.js",
+    "2": "tsc && node ./dist/2_example_common_instance.js",
+    "3": "tsc && node ./dist/3_example_static.js",
+    "4": "tsc && node ./dist/4_example_decoupling_1.js",
+    "5": "tsc && node ./dist/5_example_decoupling_2.js",
+    "6": "tsc && node ./dist/6_example_full_decoupling.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.3.2"
+  },
+  "dependencies": {
+    "rxjs": "^7.1.0"
+  }
+}
