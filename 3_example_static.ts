@@ -2,12 +2,13 @@
 ///
 /// Service --> Repository --> Client
 ///
-/// Manual Instanciation when needed
+/// Grouping the instances
 
 import { Observable, Subscription } from 'rxjs';
 
 let instanceCounter = 0;
 
+/// service.ts
 export class Service {
   private static instance?: Service;
 
@@ -39,6 +40,7 @@ export class Service {
   }
 }
 
+/// repository.ts
 export class Repository {
   private static instance?: Repository;
   private readonly service = Service.getInstance();
@@ -63,6 +65,7 @@ export class Repository {
   }
 }
 
+/// client.ts
 export class Client {
   private readonly repository = Repository.getInstance();
 
@@ -103,6 +106,7 @@ export class Client {
   }
 }
 
+/// main.ts
 const clientA = new Client();
 clientA.onInit();
 

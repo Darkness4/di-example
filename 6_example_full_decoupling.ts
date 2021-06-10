@@ -2,12 +2,13 @@
 ///
 /// Service --> Repository --> Client
 ///
-/// Manual Instanciation when needed
+/// Decoupling the objects with a DI container and with interfaces
 
 import { Observable, Subscription } from 'rxjs';
 
 let instanceCounter = 0;
 
+/// service.ts
 export class ServiceImpl implements Service {
   constructor() {
     instanceCounter++;
@@ -35,6 +36,7 @@ export interface Service {
   serveJohnDoe(): Observable<string>;
 }
 
+/// repository.ts
 export class RepositoryImpl implements Repository {
   constructor(private readonly service: Service) {
     instanceCounter++;
@@ -54,6 +56,7 @@ export interface Repository {
   fetchJohnDoe(): Observable<string>;
 }
 
+/// client.ts
 export class Client {
   constructor(private readonly repository: Repository) {
     instanceCounter++;
@@ -92,6 +95,7 @@ export class Client {
   }
 }
 
+/// module.ts
 export class Module {
   private static instance?: Module;
 
@@ -110,6 +114,7 @@ export class Module {
   repository = new RepositoryImpl(this.service);
 }
 
+/// main.ts
 const module = Module.getInstance();
 
 const clientA = new Client(module.repository);

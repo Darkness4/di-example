@@ -2,10 +2,11 @@
 ///
 /// Service --> Repository --> Client
 ///
-/// Manual Instanciation when needed
+/// Unit testing
 
 import { Observable, of, Subscription } from 'rxjs';
 
+/// service.ts
 export class ServiceImpl implements Service {
   serveHelloWorld(): Observable<string> {
     return new Observable((observer) => {
@@ -29,6 +30,7 @@ export interface Service {
   serveJohnDoe(): Observable<string>;
 }
 
+/// repository.ts
 export class RepositoryImpl implements Repository {
   constructor(private readonly service: Service) {}
 
@@ -46,6 +48,7 @@ export interface Repository {
   fetchJohnDoe(): Observable<string>;
 }
 
+/// client.ts
 export class Client {
   constructor(private readonly repository: Repository) {}
 
